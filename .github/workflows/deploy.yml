@@ -12,6 +12,10 @@ on:
           - dev
           - qa
           - prod
+  push:
+    branches:
+      - develop
+
 
 env:
   GCP_SERVICE_NAME: ${{ vars.GCP_SERVICE_NAME }}
@@ -19,6 +23,8 @@ env:
   GCP_REGION: ${{ vars.GCP_REGION }}
   DEPLOY_ENV: ${{ github.event.inputs.ambiente }}
   GCP_ARTIFACT_REPO: classifier-motheboard
+
+
 
 jobs:
   deploy:
