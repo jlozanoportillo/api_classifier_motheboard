@@ -18,7 +18,7 @@ env:
   GCP_IMAGE_NAME: ${{ vars.GCP_IMAGE_NAME }}
   GCP_REGION: ${{ vars.GCP_REGION }}
   DEPLOY_ENV: ${{ github.event.inputs.ambiente }}
-  
+  GCP_ARTIFACT_REPO: classifier-motheboard
 
 jobs:
   deploy:
@@ -41,18 +41,27 @@ jobs:
         #   service_account_key: ${{ secrets.GCP_CREDENTIALS_JSON }}
         #   export_default_credentials: true
 
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
 
-      - name: Build Docker image
+
+
+      - name: Build and Push Docker image to Artifact Registry
         run: |
-          gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GCP_IMAGE_NAME }}
+          IMAGE_URI=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.GCP_ARTIFACT_REPO }}/${{ env.GCP_IMAGE_NAME }}
+          docker build -t $IMAGE_URI .
+          docker push $IMAGE_URI
 
-      # - name: Deploy to Cloud Run
-      #   run: |
-      #     gcloud run deploy ${{ env.GCP_SERVICE_NAME }} \
-      #       --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GCP_IMAGE_NAME }} \
-      #       --platform managed \
-      #       --region ${{ env.GCP_REGION }} \
-      #       --allow-unauthenticated
+
+    #   - name: Deploy to Cloud Run
+    #     run: |
+    #       IMAGE_URI=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.GCP_ARTIFACT_REPO }}/${{ env.GCP_IMAGE_NAME }}
+    #       gcloud run deploy ${{ env.GCP_SERVICE_NAME }} \
+    #         --image $IMAGE_URI \
+    #         --platform managed \
+    #         --region ${{ env.GCP_REGION }} \
+    #         --allow-unauthenticated
+
       - name: 🔍 Debug variables
         run: |
           echo "🧪 Proyecto (GCP_PROJECT_ID): ${{ secrets.GCP_PROJECT_ID }}"
