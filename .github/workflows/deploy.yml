@@ -62,6 +62,14 @@ jobs:
             --region ${{ env.GCP_REGION }} \
             --allow-unauthenticated
 
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.GCP_SERVICE_NAME }} \
+            --image $IMAGE_URI \
+            --platform managed \
+            --region ${{ env.GCP_REGION }} \
+            --memory 1Gi \
+            --allow-unauthenticated
       - name: 🔍 Debug variables
         run: |
           echo "🧪 Proyecto (GCP_PROJECT_ID): ${{ secrets.GCP_PROJECT_ID }}"

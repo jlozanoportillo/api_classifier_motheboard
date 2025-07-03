@@ -24,7 +24,12 @@ uvicorn app.main:app --reload
 curl -X POST http://localhost:8000/predict \
   -F "file=@ruta/a/una/imagen.jpg"
 ```
-
+.
+```bash
+curl -X POST http://localhost:8000/predict-url \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "url=https://boxparts.pe/wp-content/uploads/2023/10/Placa-madre-H55-coolmark-2.png"
+```
 ## Despliegue automático
 
 Este proyecto se despliega automáticamente en Google Cloud Run usando GitHub Actions.
