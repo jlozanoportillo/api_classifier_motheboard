@@ -1,0 +1,13 @@
+.env
+venv/
+__pycache__/
+*.pyc
+
+# VSCode
+.vscode/
+#app/modelo_placas.h5
+
+
+# Modelos grandes (opcional si no quieres subirlos)
+#*.h5
+*.hdf5

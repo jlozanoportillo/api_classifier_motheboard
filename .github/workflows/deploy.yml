@@ -1,0 +1,56 @@
+name: Deploy to Cloud Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      ambiente:
+        description: "Ambiente destino (solo decorativo por ahora)"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - qa
+          - prod
+
+env:
+  GCP_SERVICE_NAME: ${{ vars.GCP_SERVICE_NAME }}
+  GCP_IMAGE_NAME: ${{ vars.GCP_IMAGE_NAME }}
+  GCP_REGION: ${{ vars.GCP_REGION }}
+  DEPLOY_ENV: ${{ github.event.inputs.ambiente }}
+  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS_JSON }}
+          export_default_credentials: true
+
+
+      # - name: Build Docker image
+      #   run: |
+      #     gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GCP_IMAGE_NAME }}
+
+      # - name: Deploy to Cloud Run
+      #   run: |
+      #     gcloud run deploy ${{ env.GCP_SERVICE_NAME }} \
+      #       --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GCP_IMAGE_NAME }} \
+      #       --platform managed \
+      #       --region ${{ env.GCP_REGION }} \
+      #       --allow-unauthenticated
+      - name: 🔍 Debug variables
+        run: |
+          echo "🧪 Proyecto (GCP_PROJECT_ID): ${{ secrets.GCP_PROJECT_ID }}"
+          echo "🧪 Servicio (GCP_SERVICE_NAME): $GCP_SERVICE_NAME"
+          echo "🧪 Imagen (GCP_IMAGE_NAME): $GCP_IMAGE_NAME"
+          echo "🧪 Región (GCP_REGION): $GCP_REGION"
+          echo "🧪 Ambiente (DEPLOY_ENV): $DEPLOY_ENV"
