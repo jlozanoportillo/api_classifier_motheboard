@@ -12,9 +12,11 @@ on:
           - dev
           - qa
           - prod
-  push:
-    branches:
-      - develop
+      branch:
+        description: "Rama a desplegar"
+        required: true
+        default: "develop"
+
 
 
 env:
