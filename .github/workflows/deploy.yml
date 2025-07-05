@@ -12,10 +12,10 @@ on:
           - dev
           - qa
           - prod
-      branch:
-        description: "Rama a desplegar"
-        required: true
-        default: "develop"
+      # branch:
+      #   description: "Rama a desplegar"
+      #   required: true
+      #   default: "develop"
 
 
 
